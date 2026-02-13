@@ -1,0 +1,223 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Campus management MVP (frontend-only): auth, announcements, notifications, polling, navigation, theming, and static assets",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Internet Identity sign-in UI + user profile create-on-first-login and editable profile screen",
+      "acceptanceCriteria": [
+        "A user can sign in using Internet Identity and is shown as authenticated in the UI",
+        "The user can update their display name and department/program from the UI and changes persist after refresh"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "create",
+          "description": "Create the app shell that reads authentication state (Internet Identity), renders signed-out vs signed-in experiences, and wires routes/sections for Profile management. Use the authorization component flow (Internet Identity + profile setup) to conditionally show a first-login profile setup modal; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useCurrentUserProfile.ts",
+          "operation": "create",
+          "description": "Add React Query hooks for getCallerUserProfile and saveCallerUserProfile, with correct enabled/loading behavior to avoid profile-setup modal flashing (per authorization component guidance); verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/auth/LoginButton.tsx",
+          "operation": "create",
+          "description": "Add a reusable Login/Logout button using useInternetIdentity, clearing React Query cache on logout. Align behavior with authorization component guidance; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/ProfilePage.tsx",
+          "operation": "create",
+          "description": "Create Profile page with form fields for display name and optional department/program, loading current profile and persisting updates via React Query mutations. Use shadcn-ui form primitives (e.g., Input, Button, Card) via composition; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/profile/ProfileSetupDialog.tsx",
+          "operation": "create",
+          "description": "Create a first-login modal/dialog that prompts for display name (and optional department/program) when getCallerUserProfile returns null, then saves profile and closes. Use shadcn-ui Dialog components via composition; verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Announcements UI: create, list (newest first), view details, and delete with author-only controls and readable timestamps",
+      "acceptanceCriteria": [
+        "Announcements can be created from the UI and persist in the backend",
+        "Announcements list is ordered by newest first and supports viewing a single announcement detail page/section",
+        "Only the author (or an admin role if implemented) can delete an announcement",
+        "Timestamps are displayed in a readable format in the UI"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useAnnouncements.ts",
+          "operation": "create",
+          "description": "Add React Query hooks for listAnnouncements, getAnnouncement, createAnnouncement, and deleteAnnouncement. Ensure list rendering is newest-first (either by trusting backend order or sorting client-side as a safety). Handle authorization failures with user-friendly errors; verify the authorization component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/AnnouncementsPage.tsx",
+          "operation": "create",
+          "description": "Create Announcements page with: (1) create announcement form (authenticated-only), (2) list of announcements, (3) delete action shown only when current user is the author (compare principals via Internet Identity). Use shadcn-ui components (Card, Button, Input/Textarea, Alert) via composition; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/AnnouncementDetailPage.tsx",
+          "operation": "create",
+          "description": "Create announcement detail view/section that displays title/body/author and a readable created timestamp, loaded via getAnnouncement. Ensure navigation from announcements list; use shadcn-ui components via composition; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/lib/format.ts",
+          "operation": "create",
+          "description": "Add shared frontend formatting helpers (e.g., bigint timestamp to readable date/time string) used by announcements and notifications."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire Announcements list and Announcement detail into navigation/routing, and ensure unauthenticated users cannot access announcement creation UI (read-only browsing behavior may remain visible if desired, but creation must be blocked). Use authorization component guidance for gating; verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Notifications UI: list with read/unread, mark as read, and link to the related announcement",
+      "acceptanceCriteria": [
+        "The UI shows a notifications list with read/unread state",
+        "Users can mark notifications as read and the state persists",
+        "Notification items link to (or open) the relevant announcement"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useNotifications.ts",
+          "operation": "create",
+          "description": "Add React Query hooks for getNotifications, getNotificationsSummary, and markNotificationAsRead. Ensure mutations update cached lists/summaries for immediate UI feedback; verify the authorization component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/NotificationsPage.tsx",
+          "operation": "create",
+          "description": "Create Notifications page showing notifications sorted by newest first, with clear read/unread styling and an action to mark as read. Each notification should navigate to/open the referenced announcement detail. Use shadcn-ui components (Badge, Button, Card/List patterns) via composition; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire Notifications page into navigation/routing and ensure notification items can navigate to the Announcement detail view. Use authorization component patterns for signed-in gating; verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Near-real-time notification updates via polling with unread badge and toast on new unread notifications",
+      "acceptanceCriteria": [
+        "Notifications are automatically refreshed on an interval (configurable in code)",
+        "A visible badge shows the count of unread notifications",
+        "When new unread notifications are detected, the UI displays a toast/alert without requiring a manual refresh"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useNotificationPolling.ts",
+          "operation": "create",
+          "description": "Implement a polling hook that periodically refetches notifications summary (and/or list) via React Query refetchInterval. Compare previous unread count to detect new unread items. Keep the polling interval configurable in code; verify the authorization component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/notifications/UnreadBadge.tsx",
+          "operation": "create",
+          "description": "Create a small unread-count badge component for the app header/nav using getNotificationsSummary. Use shadcn-ui Badge via composition; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/notifications/NewNotificationToast.tsx",
+          "operation": "create",
+          "description": "Add a toast/alert presenter that triggers when polling detects new unread notifications. Prefer existing shadcn-ui toast/sonner patterns if present; otherwise compose a lightweight in-app alert component without editing immutable UI component sources. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Integrate notification polling at the app-shell level for authenticated users, render unread badge in the global navigation, and trigger the new-unread toast when detected. Ensure no polling happens for signed-out users; verify the authorization component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "MVP navigation and responsive layout for Sign in, Dashboard, Announcements, Notifications, and Profile with auth gating",
+      "acceptanceCriteria": [
+        "Users can navigate between Dashboard, Announcements, Notifications, and Profile",
+        "Unauthenticated users are prompted to sign in and cannot create announcements",
+        "The layout is responsive and usable on mobile and desktop"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/layout/AppLayout.tsx",
+          "operation": "create",
+          "description": "Create a responsive layout with header (logo, nav links, unread badge, login button) and main content area. Use Tailwind for layout and shadcn-ui building blocks via composition; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/SignInPage.tsx",
+          "operation": "create",
+          "description": "Create a Sign-in page/section that explains the app, shows the generated hero/banner image, and provides the LoginButton. Use authorization component sign-in guidance; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "create",
+          "description": "Create a simple Dashboard page showing a summary (e.g., recent announcements preview and notification unread count). Use existing hooks and shadcn-ui cards via composition; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire navigation/routing among Sign in, Dashboard, Announcements, Notifications, and Profile. Add an auth guard so unauthenticated users are directed to Sign in and cannot access create/delete actions. Verify the authorization component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Apply a coherent campus-appropriate visual theme (non-blue/purple primary) consistently using Tailwind and composed UI components",
+      "acceptanceCriteria": [
+        "All screens share consistent typography, spacing, and component styling",
+        "Theme does not use a blue/purple primary palette unless explicitly required later",
+        "UI uses Tailwind + existing UI components via composition (no edits to immutable UI component sources)"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "create",
+          "description": "Define/adjust global CSS variables and base styles used by Tailwind + shadcn theming (typography, spacing defaults, background/foreground, and a non-blue/purple primary such as green/teal). Keep styling consistent and avoid editing immutable UI component sources."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Ensure Tailwind theme tokens map cleanly to the chosen campus theme (non-blue/purple primary), and that content scanning covers all new src files. Keep changes limited to theme configuration."
+        },
+        {
+          "path": "frontend/src/components/layout/AppLayout.tsx",
+          "operation": "modify",
+          "description": "Apply consistent layout spacing and component composition (cards, buttons, inputs) across header/nav and page containers using Tailwind utility classes (responsive) and shadcn-ui components via composition; verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Add generated static images under frontend/public/assets/generated and reference them in the React UI",
+      "acceptanceCriteria": [
+        "Generated images exist under frontend/public/assets/generated and are referenced directly by the React UI",
+        "Images load correctly in the running app without any backend image routing"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/campus-logo.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated image asset file to the workspace at the required path so it can be served statically by the frontend."
+        },
+        {
+          "path": "frontend/public/assets/generated/campus-hero.dim_1600x600.png",
+          "operation": "create",
+          "description": "Add the generated image asset file to the workspace at the required path so it can be served statically by the frontend."
+        },
+        {
+          "path": "frontend/src/components/layout/AppLayout.tsx",
+          "operation": "modify",
+          "description": "Reference and display frontend/public/assets/generated/campus-logo.dim_512x512.png in the app header (e.g., brand mark). Ensure it renders correctly across breakpoints."
+        },
+        {
+          "path": "frontend/src/pages/SignInPage.tsx",
+          "operation": "modify",
+          "description": "Reference and display frontend/public/assets/generated/campus-hero.dim_1600x600.png on the sign-in screen (e.g., hero/banner section), and ensure it remains responsive and accessible (alt text)."
+        }
+      ]
+    }
+  ]
+}

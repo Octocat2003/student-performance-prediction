@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Campus-based management system with real-time notifications using Python backend, HTML/CSS/JavaScript frontend, and MySQL database.",
+  "architectural_notes": [
+    "Tech stack: Python backend with HTML/CSS/JavaScript frontend and MySQL database.",
+    "Include real-time notification capability (e.g., WebSockets or similar)."
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Campus management app logo mark, simple geometric + academic motif (campus-logo.dim_512x512.png)\n- Wide hero banner illustration of a modern university campus scene, minimal flat style (campus-hero.dim_1600x600.png)",
+  "existing_features": [
+    {
+      "id": "feature-implement-internet-identity-sign-in-and-store-a-user-profile-record-principal-display-name-optional-department-program-that-is-created-on-first-login-and-can-be-updated-by-the-user",
+      "title": "Implement Internet Identity sign-in and store a user profile record (principal, display name, optional department/program) that is created on first login and can be updated by the user.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-core-campus-content-management-for-announcements-create-list-view-details-and-delete-announcements-with-each-announcement-containing-title-body-author-principal-and-created-timestamp",
+      "title": "Provide core campus content management for announcements: create, list, view details, and delete announcements, with each announcement containing title, body, author principal, and created timestamp.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-notifications-feature-backed-by-announcement-activity-when-a-new-announcement-is-created-add-a-notification-entry-type-reference-id-message-created-timestamp-and-expose-apis-to-fetch-notifications-for-a-user-and-mark-them-as-read",
+      "title": "Implement a notifications feature backed by announcement activity: when a new announcement is created, add a notification entry (type, reference id, message, created timestamp) and expose APIs to fetch notifications for a user and mark them as read.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-near-real-time-notification-updates-on-the-frontend-using-polling-no-websockets-periodically-refetch-notifications-and-show-an-in-app-toast-badge-when-new-unread-notifications-arrive",
+      "title": "Implement near-real-time notification updates on the frontend using polling (no WebSockets): periodically refetch notifications and show an in-app toast/badge when new unread notifications arrive.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-initial-app-navigation-and-layout-for-the-mvp-with-pages-sections-for-sign-in-dashboard-announcements-notifications-and-profile",
+      "title": "Create an initial app navigation and layout for the MVP with pages/sections for: Sign in, Dashboard, Announcements, Notifications, and Profile.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-coherent-visual-theme-colors-typography-spacing-components-appropriate-for-a-campus-management-app-and-enforce-it-consistently-across-all-screens",
+      "title": "Apply a coherent visual theme (colors, typography, spacing, components) appropriate for a campus management app and enforce it consistently across all screens.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-generated-static-image-assets-to-the-frontend-and-use-them-in-the-ui-e-g-app-header-login-screen-by-serving-them-from-frontend-public-assets-generated",
+      "title": "Add generated static image assets to the frontend and use them in the UI (e.g., app header/login screen) by serving them from frontend/public/assets/generated.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Build a campus-based management system with real-time notifications (Python, HTML/CSS/JS, MySQL).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Persist all backend data (profiles, announcements, notifications, read state) in stable structures in the single Motoko actor so data survives canister upgrades (add migration only if required by the template/state handling).",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Campus-based management system MVP with notifications (Internet Computer stack)",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

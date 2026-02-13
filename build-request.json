@@ -1,0 +1,164 @@
+{
+  "kind": "build_request",
+  "title": "Campus-based management system MVP with notifications (Internet Computer stack)",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Implement Internet Identity sign-in and store a user profile record (principal, display name, optional department/program) that is created on first login and can be updated by the user.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "campus based management system with real time notification in python ,html , css,javascript ,my Sql,etc"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A user can sign in using Internet Identity and is shown as authenticated in the UI",
+        "On first login, a profile is created in the Motoko canister keyed by the user principal",
+        "The user can update their display name and department/program from the UI and changes persist after refresh"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Provide core campus content management for announcements: create, list, view details, and delete announcements, with each announcement containing title, body, author principal, and created timestamp.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "campus based management system with real time notification in python ,html , css,javascript ,my Sql,etc"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Announcements can be created from the UI and persist in the backend",
+        "Announcements list is ordered by newest first and supports viewing a single announcement detail page/section",
+        "Only the author (or an admin role if implemented) can delete an announcement",
+        "Timestamps are displayed in a readable format in the UI"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Implement a notifications feature backed by announcement activity: when a new announcement is created, add a notification entry (type, reference id, message, created timestamp) and expose APIs to fetch notifications for a user and mark them as read.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "campus based management system with real time notification in python ,html , css,javascript ,my Sql,etc"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Creating an announcement results in a new notification stored in the backend",
+        "The UI shows a notifications list with read/unread state",
+        "Users can mark notifications as read and the state persists",
+        "Notification items link to (or open) the relevant announcement"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Implement near-real-time notification updates on the frontend using polling (no WebSockets): periodically refetch notifications and show an in-app toast/badge when new unread notifications arrive.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "real time notification"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Notifications are automatically refreshed on an interval (configurable in code)",
+        "A visible badge shows the count of unread notifications",
+        "When new unread notifications are detected, the UI displays a toast/alert without requiring a manual refresh"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Create an initial app navigation and layout for the MVP with pages/sections for: Sign in, Dashboard, Announcements, Notifications, and Profile.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "campus based management system"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Users can navigate between Dashboard, Announcements, Notifications, and Profile",
+        "Unauthenticated users are prompted to sign in and cannot create announcements",
+        "The layout is responsive and usable on mobile and desktop"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Apply a coherent visual theme (colors, typography, spacing, components) appropriate for a campus management app and enforce it consistently across all screens.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All screens share consistent typography, spacing, and component styling",
+        "Theme does not use a blue/purple primary palette unless explicitly required later",
+        "UI uses Tailwind + existing UI components via composition (no edits to immutable UI component sources)"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Persist all backend data (profiles, announcements, notifications, read state) in stable structures in the single Motoko actor so data survives canister upgrades (add migration only if required by the template/state handling).",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "...my Sql,etc"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Data persists across page reloads and subsequent queries",
+        "Data is stored in the Motoko canister (no external DB like MySQL)",
+        "If an upgrade path is needed, state migration is handled according to the project migration policy (conditional)"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Add generated static image assets to the frontend and use them in the UI (e.g., app header/login screen) by serving them from frontend/public/assets/generated.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Generated images exist under frontend/public/assets/generated and are referenced directly by the React UI",
+        "Images load correctly in the running app without any backend image routing"
+      ]
+    }
+  ],
+  "constraints": [
+    "Use the Internet Computer stack: Motoko single-actor backend and React + TypeScript + Tailwind + React Query frontend (do not implement Python/MySQL).",
+    "Do not implement WebSockets/Socket.io; implement notification updates via polling/refetch.",
+    "Do not edit files under frontend immutablePaths; compose existing UI components instead."
+  ],
+  "nonGoals": [
+    "Full student information system (enrollment, grades, attendance) unless requested explicitly.",
+    "Integration with external email/SMS/push notification services.",
+    "Third-party authentication providers beyond Internet Identity.",
+    "External database setup (e.g., MySQL)."
+  ],
+  "imageRequirements": {
+    "required": [
+      "Campus management app logo mark, simple geometric + academic motif (campus-logo.dim_512x512.png)",
+      "Wide hero banner illustration of a modern university campus scene, minimal flat style (campus-hero.dim_1600x600.png)"
+    ],
+    "edits": []
+  }
+}

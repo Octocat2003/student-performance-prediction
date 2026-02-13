@@ -1,0 +1,253 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-11T09:25:01.734Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 8,
+    "implemented": 7,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Implement Internet Identity sign-in and store a user profile record (principal, display name, optional department/program) that is created on first login and can be updated by the user.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/hooks/useCurrentUserProfile.ts",
+          "frontend/src/components/auth/LoginButton.tsx",
+          "frontend/src/pages/ProfilePage.tsx",
+          "frontend/src/components/profile/ProfileSetupDialog.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/components/auth/LoginButton.tsx",
+          "frontend/src/pages/ProfilePage.tsx",
+          "frontend/src/components/profile/ProfileSetupDialog.tsx"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Provide core campus content management for announcements: create, list, view details, and delete announcements, with each announcement containing title, body, author principal, and created timestamp.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useAnnouncements.ts",
+          "frontend/src/pages/AnnouncementsPage.tsx",
+          "frontend/src/pages/AnnouncementDetailPage.tsx",
+          "frontend/src/lib/format.ts",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/AnnouncementsPage.tsx",
+          "frontend/src/pages/AnnouncementDetailPage.tsx",
+          "frontend/src/lib/format.ts",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Implement a notifications feature backed by announcement activity: when a new announcement is created, add a notification entry (type, reference id, message, created timestamp) and expose APIs to fetch notifications for a user and mark them as read.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useNotifications.ts",
+          "frontend/src/pages/NotificationsPage.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/NotificationsPage.tsx",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Implement near-real-time notification updates on the frontend using polling (no WebSockets): periodically refetch notifications and show an in-app toast/badge when new unread notifications arrive.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useNotificationPolling.ts",
+          "frontend/src/components/notifications/UnreadBadge.tsx",
+          "frontend/src/components/notifications/NewNotificationToast.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useNotificationPolling.ts",
+          "frontend/src/components/notifications/UnreadBadge.tsx",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Create an initial app navigation and layout for the MVP with pages/sections for: Sign in, Dashboard, Announcements, Notifications, and Profile.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/layout/AppLayout.tsx",
+          "frontend/src/pages/SignInPage.tsx",
+          "frontend/src/pages/DashboardPage.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/layout/AppLayout.tsx",
+          "frontend/src/pages/SignInPage.tsx",
+          "frontend/src/pages/DashboardPage.tsx",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Apply a coherent visual theme (colors, typography, spacing, components) appropriate for a campus management app and enforce it consistently across all screens.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/index.css",
+          "frontend/tailwind.config.js",
+          "frontend/src/components/layout/AppLayout.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/index.css",
+          "frontend/tailwind.config.js",
+          "frontend/src/components/layout/AppLayout.tsx"
+        ]
+      },
+      {
+        "id": "REQ-7",
+        "summary": "Persist all backend data (profiles, announcements, notifications, read state) in stable structures in the single Motoko actor so data survives canister upgrades (add migration only if required by the template/state handling).",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-8",
+        "summary": "Add generated static image assets to the frontend and use them in the UI (e.g., app header/login screen) by serving them from frontend/public/assets/generated.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/public/assets/generated/campus-logo.dim_512x512.png",
+          "frontend/public/assets/generated/campus-hero.dim_1600x600.png",
+          "frontend/src/components/layout/AppLayout.tsx",
+          "frontend/src/pages/SignInPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/public/assets/generated/campus-logo.dim_512x512.png",
+          "frontend/public/assets/generated/campus-hero.dim_1600x600.png",
+          "frontend/src/components/layout/AppLayout.tsx",
+          "frontend/src/pages/SignInPage.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/authorization/MixinAuthorization.mo",
+    "backend/authorization/access-control.mo",
+    "backend/main.mo",
+    "build-request.json",
+    "build-template/Dockerfile",
+    "build-template/LICENSE",
+    "build-template/README.md",
+    "build-template/deploy.sh",
+    "build-template/icp.yaml",
+    "build-template/package.json",
+    "build-template/pnpm-lock.yaml",
+    "build-template/pnpm-workspace.yaml",
+    "build-template/scripts/prune-unused-images.js",
+    "build-template/scripts/resize-images.js",
+    "build-template/src/backend/canister.yaml",
+    "build-template/src/backend/system-idl/aaaaa-aa.did",
+    "build-template/src/frontend/canister.yaml",
+    "build-template/src/frontend/components.json",
+    "build-template/src/frontend/env.json",
+    "build-template/src/frontend/eslint-rules/no-bigint-in-query-keys.js",
+    "build-template/src/frontend/eslint-rules/require-internet-identity-provider.js",
+    "build-template/src/frontend/eslint.config.js",
+    "build-template/src/frontend/package.json",
+    "build-template/src/frontend/postcss.config.js",
+    "build-template/src/frontend/src/components/ui/accordion.tsx",
+    "build-template/src/frontend/src/components/ui/alert-dialog.tsx",
+    "build-template/src/frontend/src/components/ui/alert.tsx",
+    "build-template/src/frontend/src/components/ui/aspect-ratio.tsx",
+    "build-template/src/frontend/src/components/ui/avatar.tsx",
+    "build-template/src/frontend/src/components/ui/badge.tsx",
+    "build-template/src/frontend/src/components/ui/breadcrumb.tsx",
+    "build-template/src/frontend/src/components/ui/button.tsx",
+    "build-template/src/frontend/src/components/ui/calendar.tsx",
+    "build-template/src/frontend/src/components/ui/card.tsx",
+    "build-template/src/frontend/src/components/ui/carousel.tsx",
+    "build-template/src/frontend/src/components/ui/chart.tsx",
+    "build-template/src/frontend/src/components/ui/checkbox.tsx",
+    "build-template/src/frontend/src/components/ui/collapsible.tsx",
+    "build-template/src/frontend/src/components/ui/command.tsx",
+    "build-template/src/frontend/src/components/ui/context-menu.tsx",
+    "build-template/src/frontend/src/components/ui/dialog.tsx",
+    "build-template/src/frontend/src/components/ui/drawer.tsx",
+    "build-template/src/frontend/src/components/ui/dropdown-menu.tsx",
+    "build-template/src/frontend/src/components/ui/form.tsx",
+    "build-template/src/frontend/src/components/ui/hover-card.tsx",
+    "build-template/src/frontend/src/components/ui/input-otp.tsx",
+    "build-template/src/frontend/src/components/ui/input.tsx",
+    "build-template/src/frontend/src/components/ui/label.tsx",
+    "build-template/src/frontend/src/components/ui/menubar.tsx",
+    "build-template/src/frontend/src/components/ui/navigation-menu.tsx",
+    "build-template/src/frontend/src/components/ui/pagination.tsx",
+    "build-template/src/frontend/src/components/ui/popover.tsx",
+    "build-template/src/frontend/src/components/ui/progress.tsx",
+    "build-template/src/frontend/src/components/ui/radio-group.tsx",
+    "build-template/src/frontend/src/components/ui/resizable.tsx",
+    "build-template/src/frontend/src/components/ui/scroll-area.tsx",
+    "build-template/src/frontend/src/components/ui/select.tsx",
+    "build-template/src/frontend/src/components/ui/separator.tsx",
+    "build-template/src/frontend/src/components/ui/sheet.tsx",
+    "build-template/src/frontend/src/components/ui/sidebar.tsx",
+    "build-template/src/frontend/src/components/ui/skeleton.tsx",
+    "build-template/src/frontend/src/components/ui/slider.tsx",
+    "build-template/src/frontend/src/components/ui/sonner.tsx",
+    "build-template/src/frontend/src/components/ui/switch.tsx",
+    "build-template/src/frontend/src/components/ui/table.tsx",
+    "build-template/src/frontend/src/components/ui/tabs.tsx",
+    "build-template/src/frontend/src/components/ui/textarea.tsx",
+    "build-template/src/frontend/src/components/ui/toggle-group.tsx",
+    "build-template/src/frontend/src/components/ui/toggle.tsx",
+    "build-template/src/frontend/src/components/ui/tooltip.tsx",
+    "build-template/src/frontend/src/hooks/use-mobile.tsx",
+    "build-template/src/frontend/src/lib/utils.ts",
+    "build-template/src/frontend/tsconfig.json",
+    "build-template/src/frontend/vite.config.js",
+    "build-template/tsconfig.json",
+    "caffeine.lock.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/public/assets/generated/campus-hero.dim_1600x600.png",
+    "frontend/public/assets/generated/campus-logo.dim_512x512.png",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/auth/LoginButton.tsx",
+    "frontend/src/components/layout/AppLayout.tsx",
+    "frontend/src/components/notifications/UnreadBadge.tsx",
+    "frontend/src/components/profile/ProfileSetupDialog.tsx",
+    "frontend/src/config.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/useNotificationPolling.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/index.css",
+    "frontend/src/lib/format.ts",
+    "frontend/src/main.tsx",
+    "frontend/src/pages/AnnouncementDetailPage.tsx",
+    "frontend/src/pages/AnnouncementsPage.tsx",
+    "frontend/src/pages/DashboardPage.tsx",
+    "frontend/src/pages/NotificationsPage.tsx",
+    "frontend/src/pages/ProfilePage.tsx",
+    "frontend/src/pages/SignInPage.tsx",
+    "frontend/src/ui-summary.json",
+    "frontend/src/utils/StorageClient.ts",
+    "frontend/src/utils/urlParams.ts",
+    "frontend/tailwind.config.js",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

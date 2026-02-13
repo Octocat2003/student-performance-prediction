@@ -1,0 +1,153 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-implement-internet-identity-sign-in-and-store-a-user-profile-record-principal-display-name-optional-department-program-that-is-created-on-first-login-and-can-be-updated-by-the-user",
+      "featureTitle": "Implement Internet Identity sign-in and store a user profile record (principal, display name, optional department/program) that is created on first login and can be updated by the user.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/auth/LoginButton.tsx",
+        "frontend/src/components/profile/ProfileSetupDialog.tsx",
+        "frontend/src/pages/ProfilePage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-provide-core-campus-content-management-for-announcements-create-list-view-details-and-delete-announcements-with-each-announcement-containing-title-body-author-principal-and-created-timestamp",
+      "featureTitle": "Provide core campus content management for announcements: create, list, view details, and delete announcements, with each announcement containing title, body, author principal, and created timestamp.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/lib/format.ts",
+        "frontend/src/pages/AnnouncementDetailPage.tsx",
+        "frontend/src/pages/AnnouncementsPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-a-notifications-feature-backed-by-announcement-activity-when-a-new-announcement-is-created-add-a-notification-entry-type-reference-id-message-created-timestamp-and-expose-apis-to-fetch-notifications-for-a-user-and-mark-them-as-read",
+      "featureTitle": "Implement a notifications feature backed by announcement activity: when a new announcement is created, add a notification entry (type, reference id, message, created timestamp) and expose APIs to fetch notifications for a user and mark them as read.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/pages/NotificationsPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-near-real-time-notification-updates-on-the-frontend-using-polling-no-websockets-periodically-refetch-notifications-and-show-an-in-app-toast-badge-when-new-unread-notifications-arrive",
+      "featureTitle": "Implement near-real-time notification updates on the frontend using polling (no WebSockets): periodically refetch notifications and show an in-app toast/badge when new unread notifications arrive.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/notifications/UnreadBadge.tsx",
+        "frontend/src/hooks/useNotificationPolling.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-an-initial-app-navigation-and-layout-for-the-mvp-with-pages-sections-for-sign-in-dashboard-announcements-notifications-and-profile",
+      "featureTitle": "Create an initial app navigation and layout for the MVP with pages/sections for: Sign in, Dashboard, Announcements, Notifications, and Profile.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/layout/AppLayout.tsx",
+        "frontend/src/pages/DashboardPage.tsx",
+        "frontend/src/pages/SignInPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-apply-a-coherent-visual-theme-colors-typography-spacing-components-appropriate-for-a-campus-management-app-and-enforce-it-consistently-across-all-screens",
+      "featureTitle": "Apply a coherent visual theme (colors, typography, spacing, components) appropriate for a campus management app and enforce it consistently across all screens.",
+      "files": [
+        "frontend/src/components/layout/AppLayout.tsx",
+        "frontend/src/index.css",
+        "frontend/tailwind.config.js"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-generated-static-image-assets-to-the-frontend-and-use-them-in-the-ui-e-g-app-header-login-screen-by-serving-them-from-frontend-public-assets-generated",
+      "featureTitle": "Add generated static image assets to the frontend and use them in the UI (e.g., app header/login screen) by serving them from frontend/public/assets/generated.",
+      "files": [
+        "frontend/src/components/layout/AppLayout.tsx",
+        "frontend/src/pages/SignInPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

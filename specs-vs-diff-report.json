@@ -1,0 +1,81 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-11T09:25:01.731Z",
+  "summary": "Diff adds an Internet Computer MVP with II auth hooks, TanStack Router pages (Sign in/Dashboard/Announcements/Notifications/Profile), announcement CRUD UI, notification polling with unread badge + toast, and a Motoko canister with announcement/profile/notification types plus access control initialization. Some key backend behaviors required by the spec are not clearly implemented from the visible diff, especially auto-profile creation on first login and stable (upgrade-safe) persistence; notification fan-out appears limited to the author only.",
+  "missing_requirements": [
+    {
+      "id": "REQ-1",
+      "requirement": "On first login, a profile is created in the Motoko canister keyed by the user principal (auto-created).",
+      "reason": "Frontend shows a ProfileSetupDialog when getCallerUserProfile returns null, but the backend does not show any logic to automatically create a profile record on first login; creation appears to require an explicit saveCallerUserProfile call.",
+      "evidence": [
+        "backend/main.mo",
+        "frontend/src/App.tsx",
+        "frontend/src/components/profile/ProfileSetupDialog.tsx"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "requirement": "When a new announcement is created, add a notification entry for a user (notifications feature backed by announcement activity) and expose APIs to fetch notifications for a user.",
+      "reason": "The backend’s createAnnouncement creates a notification with `user = caller`, which means only the announcement author receives the notification; the requirement implies notifications should be fetchable for users impacted by announcement activity (campus-wide), not only the creator. No evidence of fan-out to other users is shown.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "requirement": "Persist all backend data (profiles, announcements, notifications, read state) in stable structures so data survives canister upgrades (with migration if needed).",
+      "reason": "The canister defines in-memory `let announcements = Map.empty...` / `userProfiles` / `notifications` / `notificationReadState` and `var next...Id`, but there is no visible use of `stable var` and no preupgrade/postupgrade hooks shown; as written/visible, this does not demonstrate upgrade-safe stable persistence.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Admin/role-based access control initialization via a secret URL parameter (`caffeineAdminToken`) and `_initializeAccessControlWithSecret` call.",
+      "reason": "BuildRequest did not ask for secret-token-based admin bootstrapping or URL-param admin initialization (admin role was only mentioned as optional for delete authorization, not as a required secret-token system).",
+      "evidence": [
+        "frontend/src/hooks/useActor.ts",
+        "frontend/src/utils/urlParams.ts",
+        "backend/main.mo"
+      ]
+    },
+    {
+      "description": "Use of `next-themes` ThemeProvider/system theme toggling infrastructure.",
+      "reason": "BuildRequest requires a coherent theme, but does not request next-themes or system theme support specifically.",
+      "evidence": [
+        "frontend/src/App.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.66,
+  "changed_files": [
+    "all_files_summary.json",
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/components/auth/LoginButton.tsx",
+    "frontend/src/components/layout/AppLayout.tsx",
+    "frontend/src/components/notifications/UnreadBadge.tsx",
+    "frontend/src/components/profile/ProfileSetupDialog.tsx",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/useNotificationPolling.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/index.css",
+    "frontend/src/lib/format.ts",
+    "frontend/src/main.tsx",
+    "frontend/src/pages/AnnouncementDetailPage.tsx",
+    "frontend/src/pages/AnnouncementsPage.tsx",
+    "frontend/src/pages/DashboardPage.tsx",
+    "frontend/src/pages/NotificationsPage.tsx",
+    "frontend/src/pages/ProfilePage.tsx",
+    "frontend/src/pages/SignInPage.tsx",
+    "frontend/src/utils/urlParams.ts",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}

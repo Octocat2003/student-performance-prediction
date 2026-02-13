@@ -1,0 +1,228 @@
+import Array "mo:core/Array";
+import List "mo:core/List";
+import Map "mo:core/Map";
+import Int "mo:core/Int";
+import Text "mo:core/Text";
+import Time "mo:core/Time";
+import Order "mo:core/Order";
+import Principal "mo:core/Principal";
+import Runtime "mo:core/Runtime";
+import MixinAuthorization "authorization/MixinAuthorization";
+import AccessControl "authorization/access-control";
+
+actor {
+  module AnnouncementModule {
+    public type Announcement = {
+      id : Nat;
+      title : Text;
+      body : Text;
+      author : Principal;
+      createdTimestamp : Int;
+    };
+
+    public func compare(a : Announcement, b : Announcement) : Order.Order {
+      Int.compare(b.createdTimestamp, a.createdTimestamp);
+    };
+  };
+
+  public type Announcement = AnnouncementModule.Announcement;
+
+  public type Notification = {
+    id : Nat;
+    user : Principal;
+    notificationType : Text;
+    referenceId : Nat;
+    message : Text;
+    createdTimestamp : Int;
+    isRead : Bool;
+  };
+
+  public type UserProfile = {
+    principal : Principal;
+    displayName : Text;
+    department : ?Text;
+  };
+
+  public type NotificationSummary = {
+    total : Nat;
+    unread : Nat;
+  };
+
+  // Stable storage
+  let announcements = Map.empty<Nat, Announcement>();
+  let userProfiles = Map.empty<Principal, UserProfile>();
+  let notifications = Map.empty<Nat, Notification>();
+
+  // Custom compare function for (Principal, Nat)
+  module StableTuple {
+    public func compare(tuple1 : (Principal, Nat), tuple2 : (Principal, Nat)) : Order.Order {
+      switch (Principal.compare(tuple1.0, tuple2.0)) {
+        case (#equal) { Nat.compare(tuple1.1, tuple2.1) };
+        case (order) { order };
+      };
+    };
+  };
+
+  let notificationReadState = Map.empty<(Principal, Nat), Bool>();
+
+  var nextAnnouncementId : Nat = 0;
+  var nextNotificationId : Nat = 0;
+
+  // Initialize the user system state
+  let accessControlState = AccessControl.initState();
+  include MixinAuthorization(accessControlState);
+
+  // User Profile Management
+  public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
+    userProfiles.get(caller);
+  };
+
+  public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
+    if (caller != user and not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Can only view your own profile");
+    };
+    userProfiles.get(user);
+  };
+
+  public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can save profiles");
+    };
+
+    // SECURITY: Ensure the profile principal matches the caller
+    if (profile.principal != caller) {
+      Runtime.trap("Unauthorized: Cannot create profile for another user");
+    };
+
+    userProfiles.add(caller, profile);
+  };
+
+  // Announcement Management
+  public shared ({ caller }) func createAnnouncement(title : Text, body : Text) : async Nat {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can create announcements");
+    };
+
+    let announcementId = nextAnnouncementId;
+    let announcement : Announcement = {
+      id = announcementId;
+      title;
+      body;
+      author = caller;
+      createdTimestamp = Time.now();
+    };
+    announcements.add(announcementId, announcement);
+    nextAnnouncementId += 1;
+
+    // Create notification for the new announcement
+    let notificationId = nextNotificationId;
+    let notification : Notification = {
+      id = notificationId;
+      user = caller;
+      notificationType = "announcement";
+      referenceId = announcementId;
+      message = "New announcement: " # title;
+      createdTimestamp = Time.now();
+      isRead = false;
+    };
+    notifications.add(notificationId, notification);
+    nextNotificationId += 1;
+
+    announcementId;
+  };
+
+  public query ({ caller }) func listAnnouncements() : async [Announcement] {
+    let announcementsList = announcements.values().toArray();
+    announcementsList.sort();
+  };
+
+  public query ({ caller }) func getAnnouncement(id : Nat) : async ?Announcement {
+    // Accessible to all users including guests
+    announcements.get(id);
+  };
+
+  public shared ({ caller }) func deleteAnnouncement(id : Nat) : async () {
+    switch (announcements.get(id)) {
+      case (null) {
+        Runtime.trap("Announcement not found");
+      };
+      case (?announcement) {
+        if (announcement.author != caller and not (AccessControl.isAdmin(accessControlState, caller))) {
+          Runtime.trap("Unauthorized: Only the author or admin can delete this announcement");
+        };
+        announcements.remove(id);
+      };
+    };
+  };
+
+  // Notification Management
+  public query ({ caller }) func getNotifications() : async [Notification] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view notifications");
+    };
+
+    let userNotifications = List.empty<Notification>();
+    for ((notifId, notification) in notifications.entries()) {
+      // Check read state
+      let isRead = switch (notificationReadState.get((caller, notifId))) {
+        case (?read) { read };
+        case (null) { false };
+      };
+
+      let updatedNotification : Notification = {
+        id = notification.id;
+        user = notification.user;
+        notificationType = notification.notificationType;
+        referenceId = notification.referenceId;
+        message = notification.message;
+        createdTimestamp = notification.createdTimestamp;
+        isRead = isRead;
+      };
+      userNotifications.add(updatedNotification);
+    };
+
+    let notifArray = userNotifications.toArray();
+    notifArray.sort(
+      func(a : Notification, b : Notification) : Order.Order {
+        Int.compare(b.createdTimestamp, a.createdTimestamp);
+      }
+    );
+  };
+
+  public shared ({ caller }) func markNotificationAsRead(notificationId : Nat) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can mark notifications as read");
+    };
+
+    switch (notifications.get(notificationId)) {
+      case (null) {
+        Runtime.trap("Notification not found");
+      };
+      case (?_) {
+        notificationReadState.add((caller, notificationId), true);
+      };
+    };
+  };
+
+  public query ({ caller }) func getNotificationsSummary() : async NotificationSummary {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view notification summary");
+    };
+
+    var total : Nat = 0;
+    var unread : Nat = 0;
+
+    for ((notifId, notification) in notifications.entries()) {
+      total += 1;
+      let isRead = switch (notificationReadState.get((caller, notifId))) {
+        case (?read) { read };
+        case (null) { false };
+      };
+      if (not isRead) {
+        unread += 1;
+      };
+    };
+
+    { total; unread };
+  };
+};
